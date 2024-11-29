@@ -21,4 +21,26 @@ public class EmployeeDAOImpl implements EmployeeDAO {
     public List<Employee> findAll() {
         return entityManager.createQuery("from Employee ", Employee.class).getResultList();
     }
+
+    @Override
+    public Employee findEmployeeById(int id) {
+        Employee employee = entityManager.find(Employee.class, id);
+        return employee;
+    }
+
+    @Override
+    public Employee save(Employee employees) {
+        Employee newEmployee = entityManager.merge(employees);
+        // Метод merge(employees) если такого сотрудника (который в параметрах метода)
+        // не будет в БД, а если он уже существует, то его данные обновятся
+        return newEmployee;
+        // Так пишется для того чтобы вернулся новый работник, а не тот, которого передали
+    }
+
+    @Override
+    public void deleteEmployeeById(int id) {
+    Employee employee = entityManager.find(Employee.class, id);
+    // Сначала мы находим сотрудника, а затем его удаляем
+    entityManager.remove(employee);
+    }
 }
