@@ -31,7 +31,8 @@ public class EmployeeRestController {
         Employee employee = employeeService.findEmployeeById(employeeId);
         if (employee == null) {
             throw new RuntimeException("Employee with id = " + employeeId + " not found.");
-        } else {
+        }
+        else {
             return employee;
         }
     }
@@ -76,4 +77,30 @@ public class EmployeeRestController {
         return updatedEmployee;
     }
 
+    @DeleteMapping("/employees/{employeeId}")
+    // Эта аннотация служит для удаления записей
+    // Для удаления сотрудника мы будем использовать метод delete()
+    // Метод delete() мы не можем использовать в браузере, т.к.
+    // в браузере мы можем использовать только метод get()
+    // но мы будем использовать метод delete() в приложении Postman.
+    // Через метод delete() мы отправляем на удаление
+    // данные в БД, а не получаем как через метод get()
+    // Мы удаляем из БД сотрудника, сначала через метод get()
+    // получив всех сотрудников, далее в конце адресной строки добавив /6,
+    // и выбрав метод delete() нажав Send получаем сообщение:
+    // Deleted employee - Employee{id=6, firstName='Tania',
+    // lastName='Vetrova', email='vetrova@gmail.com'}
+    public String deleteEmployee(@PathVariable int employeeId) {
+        Employee employee = employeeService.findEmployeeById(employeeId);
+        if (employee == null) {
+            throw new RuntimeException("Employee with id = " + employeeId + " not found.");
+        }
+        else {
+            employeeService.deleteEmployeeById(employeeId);
+        }
+        return "Deleted employee - " + employee.toString();
+        // т.к. информация без использования метода toString()
+        // будет точно такой же как и без его использования, то
+        // он горит серым цветом
+    }
 }
